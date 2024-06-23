@@ -172,6 +172,7 @@ class PauseSubState extends MusicBeatSubState
    * Fades to the charter after a period before fading back.
    */
   var metadataArtist:FlxText;
+  var metadataCharter:FlxText;
 
   /**
    * The actual text objects for the menu entries.
@@ -301,8 +302,17 @@ class PauseSubState extends MusicBeatSubState
     }
     metadataArtist.scrollFactor.set(0, 0);
     metadata.add(metadataArtist);
+	
+	metadataCharter = new FlxText(20, metadataArtist.y + 32, FlxG.width - 40, 'Charter: ${Constants.DEFAULT_CHARTER}');
+    metadataCharter.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, FlxTextAlign.RIGHT);
+    if (PlayState.instance?.currentChart != null)
+    {
+      metadataCharter.text = 'Charter: ${PlayState.instance.currentChart.charter}';
+    }
+    metadataCharter.scrollFactor.set(0, 0);
+    metadata.add(metadataCharter);
 
-    var metadataDifficulty:FlxText = new FlxText(20, metadataArtist.y + 32, FlxG.width - 40, 'Difficulty: ');
+    var metadataDifficulty:FlxText = new FlxText(20, metadataCharter.y + 32, FlxG.width - 40, 'Difficulty: ');
     metadataDifficulty.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, FlxTextAlign.RIGHT);
     if (PlayState.instance?.currentDifficulty != null)
     {
@@ -329,21 +339,21 @@ class PauseSubState extends MusicBeatSubState
 
   function startCharterTimer():Void
   {
-    charterFadeTween = FlxTween.tween(metadataArtist, {alpha: 0.0}, CHARTER_FADE_DURATION,
+    charterFadeTween = FlxTween.tween(metadataCharter, {alpha: 0.0}, CHARTER_FADE_DURATION,
       {
         startDelay: CHARTER_FADE_DELAY,
         ease: FlxEase.quartOut,
         onComplete: (_) -> {
           if (PlayState.instance?.currentChart != null)
           {
-            metadataArtist.text = 'Charter: ${PlayState.instance.currentChart.charter ?? 'Unknown'}';
+            metadataCharter.text = 'Charter: ${PlayState.instance.currentChart.charter ?? 'Unknown'}';
           }
           else
           {
-            metadataArtist.text = 'Charter: ${Constants.DEFAULT_CHARTER}';
+            metadataCharter.text = 'Charter: ${Constants.DEFAULT_CHARTER}';
           }
 
-          FlxTween.tween(metadataArtist, {alpha: 1.0}, CHARTER_FADE_DURATION,
+          FlxTween.tween(metadataCharter, {alpha: 1.0}, CHARTER_FADE_DURATION,
             {
               ease: FlxEase.quartOut,
               onComplete: (_) -> {
