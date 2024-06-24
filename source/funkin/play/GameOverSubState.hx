@@ -284,27 +284,27 @@ class GameOverSubState extends MusicBeatSubState
       else
       {
         // Music hasn't started yet.
-        switch (PlayStatePlaylist.campaignId)
-        {
-          // TODO: Make the behavior for playing Jeff's voicelines generic or un-hardcoded.
-          // This will simplify the class and make it easier for mods to add death quotes.
-          case 'week7':
-            if (boyfriend.getCurrentAnimation().startsWith('firstDeath') && boyfriend.isAnimationFinished() && !playingJeffQuote)
-            {
-              playingJeffQuote = true;
-              playJeffQuote();
-              // Start music at lower volume
-              startDeathMusic(0.2, false);
-              boyfriend.playAnimation('deathLoop' + animationSuffix);
-            }
-          default:
-            // Start music at normal volume once the initial death animation finishes.
-            if (boyfriend.getCurrentAnimation().startsWith('firstDeath') && boyfriend.isAnimationFinished())
-            {
-              startDeathMusic(1.0, false);
-              boyfriend.playAnimation('deathLoop' + animationSuffix);
-            }
-        }
+		if (boyfriend.getCurrentAnimation().startsWith('firstDeath') && boyfriend.isAnimationFinished())
+		{
+			boyfriend.playAnimation('deathLoop' + animationSuffix);
+      
+			// TODO: Make the behavior for playing Jeff's voicelines generic or un-hardcoded.
+			// This will simplify the class and make it easier for mods to add death quotes.
+			switch (PlayStatePlaylist.campaignId)
+			{
+				case 'week7':
+					if (!playingJeffQuote)
+					{
+						playingJeffQuote = true;
+						playJeffQuote();
+						// Start music at lower volume
+						startDeathMusic(0.2, false);
+					}
+					default:
+						// Start music at normal volume once the initial death animation finishes.
+						startDeathMusic(1.0, false);
+			}
+		}
       }
     }
 
